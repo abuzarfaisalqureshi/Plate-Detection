@@ -1,15 +1,15 @@
 # Plate-Detection
 # 🚘 License Plate Detection (YOLO11)
 
-A deep-learning project that detects **vehicle license plates** in images and videos.
-It uses a custom-trained **YOLO11n** model (`best.pt`) from [Ultralytics](https://docs.ultralytics.com) and ships with a simple **Gradio** web app.
+A deep-learning project that detects **vehicle license plates** in images.
+It uses a custom-trained **YOLO11n** model (`best.pt`) from [Ultralytics](https://docs.ultralytics.com) and ships with a simple **Streamlit** web app.
 
 ---
 
 ## ✨ Features
 
-- Detects license plates in **images** (upload, webcam or clipboard)
-- Detects license plates in **videos** (frame-by-frame, saved as annotated MP4)
+- Detects license plates in **images** (file upload or camera)
+- Download the annotated result as PNG
 - Adjustable **confidence** and **IoU** thresholds
 - Shows bounding-box coordinates and confidence scores in a table
 - Lightweight model (~5 MB) – runs on CPU, faster with GPU
@@ -30,9 +30,10 @@ It uses a custom-trained **YOLO11n** model (`best.pt`) from [Ultralytics](https:
 
 ```
 .
-├── app.py             # Gradio web application
+├── app.py             # Streamlit web application
 ├── best.pt            # Trained YOLO11n weights
 ├── requirements.txt   # Python dependencies
+├── packages.txt       # System packages (for Streamlit Cloud)
 └── README.md
 ```
 
@@ -64,19 +65,28 @@ It uses a custom-trained **YOLO11n** model (`best.pt`) from [Ultralytics](https:
 ## 🚀 Run the App
 
 ```bash
-python app.py
+streamlit run app.py
 ```
 
-Then open the local URL shown in the terminal (usually <http://127.0.0.1:7860>).
+Then open the local URL shown in the terminal (usually <http://localhost:8501>).
 
 ### How to use
 
-1. Choose the **Image** or **Video** tab.
-2. Upload a file (or use the webcam for images).
+1. Choose **Upload image** or **Use camera** in the sidebar.
+2. Upload / capture a vehicle image.
 3. Adjust the thresholds if needed:
    - **Confidence** – higher = fewer but more certain detections.
    - **IoU** – controls how overlapping boxes are merged.
-4. Click **Detect**.
+4. The result appears automatically.
+
+## ☁️ Deploy on Streamlit Community Cloud
+
+1. Push these files to a **public GitHub repo** (`best.pt` must be uploaded as a plain `.pt` file, not zipped):
+   `app.py`, `best.pt`, `requirements.txt`, `packages.txt`, `README.md`
+2. Go to <https://share.streamlit.io> and sign in with GitHub.
+3. Click **Create app** → select the repo, branch `main`, main file `app.py`.
+4. (Optional) Under *Advanced settings* choose Python 3.11 or 3.12.
+5. Click **Deploy** – the first build takes a few minutes.
 
 ## 🐍 Use the Model in Your Own Code
 
@@ -100,7 +110,6 @@ yolo detect predict model=best.pt source=car.jpg conf=0.25
 
 - If detections are missed, lower the confidence threshold (e.g. `0.15`).
 - If you get false positives, raise it (e.g. `0.5`).
-- For video output to play in the browser, having **FFmpeg** installed helps.
 - Best results are on clear, well-lit images where the plate is reasonably large.
 
 ## 🛠️ Troubleshooting
@@ -108,8 +117,7 @@ yolo detect predict model=best.pt source=car.jpg conf=0.25
 | Problem | Fix |
 |---------|-----|
 | `FileNotFoundError: best.pt` | Put `best.pt` next to `app.py` |
-| Slow on video | Use a GPU or a shorter / lower-resolution clip |
-| Output video won't play | Install FFmpeg, or open the file from the temp folder |
+| `libGL.so.1` error on deploy | Make sure `packages.txt` (libgl1) is in the repo |
 | `ModuleNotFoundError` | Re-run `pip install -r requirements.txt` |
 
 ## 📜 License
@@ -120,4 +128,4 @@ should comply with it (or use an [Ultralytics Enterprise License](https://ultral
 ## 🙏 Acknowledgements
 
 - [Ultralytics YOLO11](https://docs.ultralytics.com)
-- [Gradio](https://gradio.app)
+- [Streamlit](https://streamlit.io)
